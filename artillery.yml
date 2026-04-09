@@ -1,0 +1,77 @@
+config:
+  target: 'http://localhost:3000'
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: Warm up
+    - duration: 120
+      arrivalRate: 20
+      name: Load test
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+
+scenarios:
+  - name: 'User authentication and data retrieval'
+    weight: 40
+    flow:
+      - post:
+          url: '/api/auth/login'
+          json:
+            phone: '1234567890'
+            password: 'password123'
+          capture:
+            json: '$.token'
+            as: 'token'
+      - get:
+          url: '/api/users'
+          headers:
+            Authorization: 'Bearer {{ token }}'
+
+  - name: 'Attendance operations'
+    weight: 30
+    flow:
+      - post:
+          url: '/api/auth/login'
+          json:
+            phone: '1234567890'
+            password: 'password123'
+          capture:
+            json: '$.token'
+            as: 'token'
+      - get:
+          url: '/api/attendance'
+          headers:
+            Authorization: 'Bearer {{ token }}'
+
+  - name: 'Leave requests'
+    weight: 20
+    flow:
+      - post:
+          url: '/api/auth/login'
+          json:
+            phone: '1234567890'
+            password: 'password123'
+          capture:
+            json: '$.token'
+            as: 'token'
+      - get:
+          url: '/api/leaves'
+          headers:
+            Authorization: 'Bearer {{ token }}'
+
+  - name: 'Reports generation'
+    weight: 10
+    flow:
+      - post:
+          url: '/api/auth/login'
+          json:
+            phone: '1234567890'
+            password: 'password123'
+          capture:
+            json: '$.token'
+            as: 'token'
+      - get:
+          url: '/api/reports/stats'
+          headers:
+            Authorization: 'Bearer {{ token }}'
