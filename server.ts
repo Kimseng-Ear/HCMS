@@ -38,7 +38,7 @@ async function startServer() {
     }));
     
     // Handle SPA routing - serve index.html for all non-API routes
-    app.get('/:path*', (req, res) => {
+    app.use((req, res) => {
       if (!req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
         res.sendFile('dist/index.html', { root: '.' });
       } else {
