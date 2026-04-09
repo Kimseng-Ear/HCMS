@@ -5,7 +5,7 @@ dotenv.config();
 
 const host = process.env.DB_HOST;
 const configuredDialect = (process.env.DB_DIALECT || '').toLowerCase();
-const dialect = configuredDialect || (process.env.NODE_ENV === 'production' ? 'mysql' : 'sqlite');
+const dialect = configuredDialect || (host ? 'mysql' : 'sqlite');
 const isMySql = dialect === 'mysql';
 
 export const sequelize = new Sequelize(
